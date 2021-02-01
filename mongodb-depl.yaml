@@ -35,6 +35,8 @@ spec:
         envFrom:
           - configMapRef:
               name: mongodb-config
+          - secretRef:
+              name: mongo-auth
         volumeMounts:
         - name: mongodb
           mountPath: /var/lib/mongodb/data

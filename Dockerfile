@@ -9,13 +9,13 @@ LABEL author.name="Ravindra Nallamothu" \
       description="Demo Application"
       
 # Copy jar file to specified folder in Base Image
-COPY ./springboot-mongodb-k8.jar /usr/app/
+COPY ./springboot-mongodb-k8s.jar /usr/app/
 
 # Default Working Directory
 WORKDIR /usr/app/
 
 # Executing Shell Command....Touching the jar file
-RUN sh -c 'touch springboot-mongodb-k8.jar'
+RUN sh -c 'touch springboot-mongodb-k8s.jar'
 
 # Instructing Docker to execute our application
-ENTRYPOINT ["java","-jar","springboot-mongodb-k8.jar"]
+ENTRYPOINT ["java","-jar","springboot-mongodb-k8s.jar"]
