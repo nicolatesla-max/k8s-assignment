@@ -13,6 +13,16 @@ pipeline {
       
     }
     
+    stage("run backend") {
+      
+      steps {
+        echo 'Executing Maven'
+        withMaven() {
+          sh 'mvn -version'
+      }
+      
+    }
+    
     stage("deploy") {
       
       steps {
