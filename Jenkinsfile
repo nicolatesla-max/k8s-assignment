@@ -17,7 +17,7 @@ pipeline {
       
       steps {
         echo 'Executing Maven'
-        withMaven() {
+        maven() {
           sh 'mvn -version'
         }
       }
