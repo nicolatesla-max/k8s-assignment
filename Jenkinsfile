@@ -19,6 +19,7 @@ pipeline {
         echo 'Executing Maven'
         withMaven() {
           sh 'mvn -version'
+        }
       }
       
     }
