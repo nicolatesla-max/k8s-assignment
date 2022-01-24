@@ -1,0 +1,57 @@
+version: 0.2
+phases:
+  pre_build:
+    commands:
+      - echo Login to ECR
+      - aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/n6x0p3t9
+      - REPOSITORY_URI=public.ecr.aws/n6x0p3t9/openshift-sample-node-app-test:codepipelinebuild
+      - OC_USER=`aws secretsmanager get-secret-value --secret-id logintokenforokd_training --region ap-south-1 --query SecretString | awk -F '[:,]' '{printf $4}' | sed 's|["\}]||g'`
+      - OC_PASS=`aws secretsmanager get-secret-value --secret-id logintokenforokd_training --region ap-south-1 --query SecretString | awk -F '[:,]' '{printf $2}' | sed 's|["\}]||g'`
+      - echo installing Helm
+      - curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+      - chmod 700 get_helm.sh
+      - ./get_helm.sh
+      - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+      - install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+      - wget https://github.com/openshift/okd/releases/download/4.9.0-0.okd-2021-12-12-025847/openshift-client-linux-4.9.0-0.okd-2021-12-12-025847.tar.gz
+      - tar xvzf openshift-client-linux-4.9.0-0.okd-2021-12-12-025847.tar.gz
+      - cp oc /usr/local/bin
+      - git clone https://github.com/ShubhamMHingne/sample-node-app.git
+  build:
+    commands:
+      - DATE=`date +%d%m%Y`
+      - echo DATE is $DATE
+      - cd sample-node-app
+      - #chmod 600 config
+      - #mkdir ~/.kube
+      - #cp config ~/.kube/
+      - #chmod 755 ~/.kube
+      - #chmod 600 ~/.kube/config
+      - ls -la
+      - npm install
+      - docker build -t public.ecr.aws/n6x0p3t9/openshift-sample-node-app-test:codepipelinebuild$DATE .
+      - docker push public.ecr.aws/n6x0p3t9/openshift-sample-node-app-test:codepipelinebuild$DATE
+      - #docker login -u="shubham_hingne" -p="VS+EIxuRMl5Erl/zgojsWdMhq/rRBPar+lMBPkgCg//BppNZUCPC1+G/xL1UICIo" quay.io
+      - #docker build -t quay.io/shubham_hingne/samplenodeapp:$DATE .
+      - #docker push quay.io/shubham_hingne/samplenodeapp:$DATE
+      # - echo Tools check
+      # - mvn --version
+      - npm --version
+      - helm version
+      # - helm get -h
+      # - kubectl version --client=true
+      #docker container run --rm --name helm-version-check quay.io/shubham_hingne/modifiedubuntu:helmgitockubectl echo "-----helm version-----" && helm version && echo "--------" && echo "-----git version-----" && git version && echo "-----oc version-----" && oc version && echo "-----kubectl version-----" && kubectl version
+  post_build:
+    commands:
+      - oc login  https://api.ocp-bootcamp-cluster.pslocplabs.com:6443  -u $OC_USER -p $OC_PASS --insecure-skip-tls-verify=true
+      - #docker image ls
+      - #helm repo add bitnami https://charts.bitnami.com/bitnami
+      - #helm search repo bitnami
+      - #helm repo update
+      #helm install bitnami/mysql --generate-name
+      - helm upgrade firstchart samplenodeappchart -n sample-shubhamtest
+      - helm list
+      - helm ls
+      - helm history firstchart
+      - oc get pods
+      - echo $OC_PASS
