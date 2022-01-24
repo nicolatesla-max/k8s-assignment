@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: employee
-          image: "ravindranallamothu/k8s-assignment"
+          image: "public.ecr.aws/y0e8u1e1/springboot-service:codepipelinebuild$DATE"
           imagePullPolicy: "Always"
           ports:
           - containerPort: 8080
