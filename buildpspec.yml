@@ -5,8 +5,8 @@ phases:
       - echo Login to ECR
       - aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/y0e8u1e1
       - REPOSITORY_URI=public.ecr.aws/y0e8u1e1/springboot-service
-      - OC_USER=`aws secretsmanager get-secret-value --secret-id OCLoginSecret --region ap-southeast-1 --query SecretString | awk -F '[:,]' '{printf $4}' | sed 's|["\}]||g'`
-      - OC_PASS=`aws secretsmanager get-secret-value --secret-id OCLoginSecret --region ap-southeast-1 --query SecretString | awk -F '[:,]' '{printf $2}' | sed 's|["\}]||g'`
+      - OC_PASS=`aws secretsmanager get-secret-value --secret-id OCLoginSecret --region ap-southeast-1 --query SecretString | awk -F '[:,]' '{printf $4}' | sed 's|["\}]||g'`
+      - OC_USER=`aws secretsmanager get-secret-value --secret-id OCLoginSecret --region ap-southeast-1 --query SecretString | awk -F '[:,]' '{printf $2}' | sed 's|["\}]||g'`
       - #echo installing Helm
       - #curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
       - #chmod 700 get_helm.sh
