@@ -8,7 +8,7 @@ metadata:
 spec:
   storageClassName: local
   capacity:
-    storage: 5Gi
+    storage: 500Mi
   accessModes:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Delete
